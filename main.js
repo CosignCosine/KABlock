@@ -5,7 +5,7 @@ var peopleIHate = localStorage.getItem("cosigncosine-block") ? JSON.parse(localS
 var peopleRegex = new RegExp(peopleIHate.join("|"), "gim");
 function deletionTest(el, depth){
     if(peopleIHate.length !== 0){
-        if ($(el) && $(el).text().match(peopleRegex)) {
+        if ($(el) && $(el).text().replace(/\!|\||\\|\?|\!|\*|\+|\{|\}|\(|\)|\[|\]|\^|\$|\&/gim, "").match(peopleRegex)) {
             var cl = $(el);
             while(depth > 0){
                 cl = cl.parent();
@@ -37,7 +37,7 @@ if(location.href.includes('profile')){
 
 //handlers
 $('.cosigncosine-block').on('click', function(){
-    var user = $(this).parent().parent().parent().find('.discussion-meta-info').find('.author-nickname').text().replace("View profile for: ", "").trim();
+    var user = $(this).parent().parent().parent().find('.discussion-meta-info').find('.author-nickname').text().replace("View profile for: ", "").trim().replace(/\!|\||\\|\?|\!|\*|\+|\{|\}|\(|\)|\[|\]|\^|\$|\&/gim, "");
     console.log(user);
     peopleIHate.push(user);
     peopleRegex = new RegExp(peopleIHate.join("|"), "gim");
