@@ -14,7 +14,7 @@ function deletionTest(el, depth){
     }
 }
 $(".author-nickname").each(function() {
-        deletionTest($(this), 3);
+        deletionTest(this, 3);
 })
 if(location.href.includes('computing')){
     $("a").each(function(){
