@@ -15,25 +15,30 @@ function deletionTest(el, depth){
         }
     }
 }
-$(".author-nickname").each(function() {
-        deletionTest(this, 3);
-})
-$(".discussion-meta-controls").each(function(){
-    $("<span>").html("•").addClass("discussion-meta-separator").appendTo(this);
-    $("<span>").html("<a href='javascript:void(0);' class='cosigncosine-block' title='Block this user'>Block</a>").addClass("flag-tools").appendTo(this);
-})
-if(location.href.includes('computing')){
-    $("a").each(function(){
-        if($(this).attr('class').match(/author/gim)){
-            deletionTest(this, 2);
+
+setInterval(function(){
+    $(".discussion-meta-controls").each(function(){
+        if(!$(this).find('cosigncosine-block')){
+            $("<span>").html("•").addClass("discussion-meta-separator").appendTo(this);
+            $("<span>").html("<a href='javascript:void(0);' class='cosigncosine-block' title='Block this user'>Block</a>").addClass("flag-tools").appendTo(this);
         }
     })
-}
-if(location.href.includes('profile')){
-    $(".nickname").each(function(){
-        deletionTest(this, 11);
+    $(".author-nickname").each(function() {
+            deletionTest(this, 3);
     })
-}
+    if(location.href.includes('computing')){
+        $("a").each(function(){
+            if($(this).attr('class').match(/author/gim)){
+                deletionTest(this, 2);
+            }
+        })
+    }
+    if(location.href.includes('profile')){
+        $(".nickname").each(function(){
+            deletionTest(this, 11);
+        })
+    }
+}, 2000);
 
 //handlers
 $('.cosigncosine-block').on('click', function(){
