@@ -16,36 +16,39 @@ function deletionTest(el, depth){
     }
 }
 
-setInterval(function(){
-    $(".discussion-meta-controls").each(function(){
-        if(!$(this).find('cosigncosine-block')){
-            $("<span>").html("•").addClass("discussion-meta-separator").appendTo(this);
-            $("<span>").html("<a href='javascript:void(0);' class='cosigncosine-block' title='Block this user'>Block</a>").addClass("flag-tools").appendTo(this);
-        }
+$(document).ready(function(){
+    //handler
+    $('body').delegate('.cosigncosine-block', 'click', function(){
+        var user = $(this).parent().parent().parent().find('.discussion-meta-info').find('.author-nickname').text().replace("View profile for: ", "").trim().replace(/\!|\||\\|\?|\!|\*|\+|\{|\}|\(|\)|\[|\]|\^|\$|\&/gim, "");
+        console.log(user);
+        peopleIHate.push(user);
+        peopleRegex = new RegExp(peopleIHate.join("|"), "gim");
+        console.log(peopleRegex);
+        localStorage.setItem("cosigncosine-block", JSON.stringify(peopleIHate))
+        console.log(localStorage.getItem('cosigncosine-block'));
     })
-    $(".author-nickname").each(function() {
-            deletionTest(this, 3);
-    })
-    if(location.href.includes('computing')){
-        $("a").each(function(){
-            if($(this).attr('class').match(/author/gim)){
-                deletionTest(this, 2);
+    setInterval(function(){
+        //removal
+        $(".discussion-meta-controls").each(function(){
+            if($(this).has('.cosigncosine-block').length === 0){
+                $("<span>").html("•").addClass("discussion-meta-separator").appendTo(this);
+                $("<span>").html("<a href='javascript:void(0);' class='cosigncosine-block' title='Block this user'>Block</a>").addClass("flag-tools").appendTo(this);
             }
         })
-    }
-    if(location.href.includes('profile')){
-        $(".nickname").each(function(){
-            deletionTest(this, 11);
+        $(".author-nickname").each(function() {
+                deletionTest(this, 3);
         })
-    }
-}, 2000);
-
-//handlers
-$('.cosigncosine-block').on('click', function(){
-    var user = $(this).parent().parent().parent().find('.discussion-meta-info').find('.author-nickname').text().replace("View profile for: ", "").trim().replace(/\!|\||\\|\?|\!|\*|\+|\{|\}|\(|\)|\[|\]|\^|\$|\&/gim, "");
-    console.log(user);
-    peopleIHate.push(user);
-    peopleRegex = new RegExp(peopleIHate.join("|"), "gim");
-    localStorage.setItem("cosigncosine-block", JSON.stringify(peopleIHate))
-    console.log(localStorage.getItem('cosigncosine-block'));
+        if(location.href.includes('computing')){
+            $("a").each(function(){
+                if($(this).attr('class').match(/author/gim)){
+                    deletionTest(this, 2);
+                }
+            })
+        }
+        if(location.href.includes('profile')){
+            $(".nickname").each(function(){
+                deletionTest(this, 11);
+            })
+        }
+    }, 500);
 })
