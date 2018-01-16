@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         KABlock
 // @namespace    http://cosigncosine.github.io/
-// @version      1.0
+// @version      1.1
 // @description  This tampermonkey extension blocks a stored list of users on your profile visually on Khan Academy.
 // @author       CosignCosine
 // @match        https://*.khanacademy.org/*
 // @grant        none
-// @require      https://code.jquery.com/jquery-1.12.4.min.js
+
 // ==/UserScript==
 
 /**
@@ -14,8 +14,6 @@ Things I plan to implement (CosignCosine):
 • question deletion
 • anonymous block statistics (who are the most blocked users, etc)
 • true, self-updating chrome extension (good luck)
-• "unblock" page on ka
-• block interface ('do you want to block?', 'why are you blocking this person', etc.)
 • complete in-program deletion
 */
 console.group('KABlock Info');
@@ -49,6 +47,9 @@ function dt(el, dpt){
         }
     }
 }
+if(!$){
+    KADefine.require('jQuery');
+}
 $(document).ready(function(){
     $("<div>").css('background', 'black').css('color', 'white !important').css('position', 'fixed').css('top', '0').css('left', '0').css('width', '100%').css('height', '20px').html('<a href="javascript:void(0)" style="color: white">' + sh ? 'Hide' : 'Show' + ' blocked users</a>').css('padding-left', '5px').addClass('cosigncosineshowblocked').appendTo('body'); // hey ka it's NOT a good idea to have z-indices of 90 or above for extensibility reasons. even with z-index of 99 i can't get over your nav and a great deal of your content.
     $('body').delegate('.cosigncosine-block', 'click', function(){
@@ -73,12 +74,6 @@ $(document).ready(function(){
             }
         });
         if(sh){
-            $(".author-nickname").each(function() {
-                if($(this).parent().parent().parent().parent().hasClass('thread'))
-                    dt(this, 4);
-                else
-                    dt(this, 3);
-            });
             if(location.href.includes('computing')){
                 $("a").each(function(){
                     if($(this).attr('class') && $(this).attr('class').match(/author/gim)){
@@ -87,8 +82,16 @@ $(document).ready(function(){
                 });
             }
             if(location.href.includes('profile')){
+                $('#profile-spinner').hide();
                 $(".nickname").each(function(){
                     dt(this, 11);
+                });
+            }else{
+                $(".author-nickname").each(function() {
+                    if($(this).parent().parent().parent().parent().hasClass('thread'))
+                        dt(this, 4);
+                    else
+                        dt(this, 3);
                 });
             }
         }
